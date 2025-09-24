@@ -41,4 +41,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * リレーション：出勤記録（Attendance）との1対多
+     * 一人のユーザーが複数回出勤する
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * リレーション：修正申請（AttendanceRequest）との1対多
+     * 一人のユーザーが複数回修正申請する
+     */
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
 }
