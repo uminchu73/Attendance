@@ -31,27 +31,47 @@
             </a>
             <nav>
                 <ul class="header-nav">
-                    {{-- ログイン時のみ表示 --}}
-                    @auth
+                    {{-- 一般ユーザーとしてログイン中 --}}
+
+                    @auth('web')
                     {{-- 勤怠ボタン --}}
-                    <li class="header-nav__item">
-                        <a class="attendance" href="">勤怠</a>
-                    </li>
-                    {{-- 勤怠一覧ボタン --}}
-                    <li class="header-nav__item">
-                        <a class="summary_button" href="/attendance/list">勤怠一覧</a>
-                    </li>
-                    {{-- 申請ボタン --}}
-                    <li class="header-nav__item">
-                        <a class="request_button" href="">申請</a>
-                    </li>
-                    <li class="header-nav__item">
+                        <li class="header-nav__item">
+                            <a class="attendance" href="">勤怠</a>
+                        </li>
+                        {{-- 勤怠一覧ボタン --}}
+                        <li class="header-nav__item">
+                            <a class="summary_button" href="{{ route('attendance.list') }}">勤怠一覧</a>
+                        </li>
+                        {{-- 申請ボタン --}}
+                        <li class="header-nav__item">
+                            <a class="request_button" href="">申請</a>
+                        </li>
+                        <li class="header-nav__item">
                         {{-- ログアウトボタン --}}
-                        <form class="form" action="/logout" method="post">
-                            @csrf
-                            <button class="logout_button">ログアウト</button>
-                        </form>
-                    </li>
+                            <form class="form" action="/logout" method="post">
+                                @csrf
+                                <button class="logout_button">ログアウト</button>
+                            </form>
+                        </li>
+                    @endauth
+
+                    {{-- 管理者としてログインしている場合 --}}
+                    @auth('admin')
+                        <li class="header-nav__item">
+                            <a class="attendance" href="{{ route('admin.summary') }}">勤怠一覧</a>
+                        </li>
+                        <li class="header-nav__item">
+                            <a class="summary_button" href="">スタッフ一覧</a>
+                        </li>
+                        <li class="header-nav__item">
+                            <a class="request_button" href="">申請一覧</a>
+                        </li>
+                        <li class="header-nav__item">
+                            <form class="form" action="{{ route('admin.logout') }}" method="post">
+                                @csrf
+                                <button class="logout_button">ログアウト</button>
+                            </form>
+                        </li>
                     @endauth
                 </ul>
             </nav>

@@ -28,7 +28,23 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // LoginResponseをカスタマイズ
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                // 管理者ガードでログインしているか確認
+                if (auth()->guard('admin')->check()) {
+                    return redirect()->intended(route('admin.summary'));
+                }
+
+                // 一般ユーザー
+                return redirect()->intended(route('home'));
+            }
+        });
+
+        // カスタムLoginRequestを使用
+        $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
+
     }
 
     /**
@@ -38,17 +54,19 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
 
+        // 登録画面（一般ユーザーのみ）
         Fortify::registerView(function () {
-            return view('auth.register');    
+            return view('auth.register');
         });
 
         Fortify::loginView(function () {
             // URL が admin なら管理者ログイン画面
+
             if (request()->is('admin/*')) {
                 return view('admin.login');
             }
             // それ以外は一般ユーザー
-            return view('auth.login');    
+            return view('auth.login');
         });
 
         RateLimiter::for('login', function (Request $request) {
@@ -61,19 +79,24 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::authenticateUsing(function (Request $request) {
             // 管理者ログインページから来た場合
             if ($request->is('admin/*')) {
-                $admin = \App\Models\Admin::where('email', $request->email)->first();
+                $admin = Admin::where('email', $request->email)->first();
 
-                if ($admin && \Hash::check($request->password, $admin->password)) {
+                if ($admin && Hash::check($request->password, $admin->password)) {
                     auth()->guard('admin')->login($admin);
                     return $admin;
                 }
+
+                // 管理者ログイン失敗
+                throw ValidationException::withMessages([
+                    'email' => ['ログイン情報が登録されていません'],
+                ]);
             }
 
-            // 通常ユーザー
-            $user = \App\Models\User::where('email', $request->email)->first();
+            //一般ユーザー
+            $user = User::where('email', $request->email)->first();
 
-            if ($user && \Hash::check($request->password, $user->password)) {
-                auth()->guard('web')->login($user); 
+            if ($user && Hash::check($request->password, $user->password)) {
+                auth()->guard('web')->login($user);
                 return $user;
             }
 
@@ -82,21 +105,6 @@ class FortifyServiceProvider extends ServiceProvider
                 'email' => ['ログイン情報が登録されていません'],
             ]);
         });
-
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
-            public function toResponse($request)
-            {
-                // 管理者なら
-                if ($request->user('admin')) {
-                    return redirect()->intended('/admin/summary');
-                }
-
-                // 一般ユーザーなら
-                return redirect()->intended('/attendance');
-            }
-        });
-
-        app()->bind(FortifyLoginRequest::class, LoginRequest::class);
 
     }
 }

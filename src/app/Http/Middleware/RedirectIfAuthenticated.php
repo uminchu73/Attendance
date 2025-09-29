@@ -23,6 +23,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                // ガード別にリダイレクト先を変更
+                if ($guard === 'admin') {
+                    return redirect()->route('admin.summary');
+                }
+                // 一般ユーザー（web guard）
                 return redirect(RouteServiceProvider::HOME);
             }
         }

@@ -1,5 +1,6 @@
 .attendance-container {
     display: flex;
+    background-color: #F0EFF2;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -18,6 +19,23 @@
     margin-bottom: 32px;
 }
 
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+    padding: 10px 20px;
+    font-weight: bold;
+
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #842029;
+    border-color: #f5c2c7;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
 .date-display {
     font-size: 40px;
     font-weight: 400;
@@ -34,9 +52,12 @@
 
 .button-group {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    gap: 100px;
     align-items: center;
+}
+
+.button-group form {
+    margin: 0;
 }
 
 .attendance-button {
@@ -57,11 +78,6 @@
     background-color: #fff;
     color: #000000;
 }
-
-
-
-
-
 
 .completion-message {
     text-align: center;

@@ -17,33 +17,54 @@ use App\Http\Controllers\AttendanceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 
 /**
- * 一般ユーザー
+ * 未認証一般ユーザー
  */
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
+/**
+ * 認証済み一般ユーザー
+ */
 Route::middleware('auth')->group(function () {
     Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('attendance', [AttendanceController::class, 'index'])->name('home');
+
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
+    Route::post('/attendance/break-in', [AttendanceController::class, 'breakIn'])->name('attendance.break-in');
+    Route::post('/attendance/break-out', [AttendanceController::class, 'breakOut'])->name('attendance.break-out');
+
+    Route::get('attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+    Route::get('attendance/detail/{attendance}', [AttendanceController::class, 'show'])
+        ->name('attendance.detail');
+
+
 });
 
-/**
- * 管理者
+/*
+ * 管理者ルート
  */
-Route::prefix('admin')->name('admin.')->group(function () {
-    //ページ表示(ログイン前)
-    Route::middleware('guest:admin')->group(function () {
-        Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
-        Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
-    });
+// 未認証管理者（ログイン画面）
+Route::get('admin/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest:admin')
+    ->name('admin.login');
 
-    //認証済み管理者
-    Route::middleware('auth:admin')->group(function () {
-        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-        Route::get('summary', [AdminController::class, 'index'])->name('summary');
-    });
-});
+Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('guest:admin')
+    ->name('admin.login.submit');
+
+// 認証済み管理者
+Route::get('admin/summary', [AdminController::class, 'index'])
+    ->middleware('auth:admin')
+    ->name('admin.summary');
+
+Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth:admin')
+    ->name('admin.logout');
