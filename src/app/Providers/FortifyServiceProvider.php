@@ -13,6 +13,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Admin;
@@ -73,6 +76,11 @@ class FortifyServiceProvider extends ServiceProvider
                 auth()->guard('web')->login($user); 
                 return $user;
             }
+
+            // ユーザーが存在しない or パスワードが間違っている場合
+            throw ValidationException::withMessages([
+                'email' => ['ログイン情報が登録されていません'],
+            ]);
         });
 
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
@@ -87,5 +95,8 @@ class FortifyServiceProvider extends ServiceProvider
                 return redirect()->intended('/attendance');
             }
         });
+
+        app()->bind(FortifyLoginRequest::class, LoginRequest::class);
+
     }
 }

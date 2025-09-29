@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttendanceController;
 
 
 /*
@@ -28,7 +28,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
-    Route::get('attendance', [AuthController::class, 'index'])->name('home');
+    Route::get('attendance', [AttendanceController::class, 'index'])->name('home');
 });
 
 /**

@@ -17,6 +17,30 @@ class Attendance extends Model
         'status',
     ];
 
+
+    /**
+     * ステータス定義
+     */
+    const STATUS_OFF = 0;   // 勤務外
+    const STATUS_WORKING  = 1;   // 出勤中
+    const STATUS_LEAVE     = 2;   // 退勤済
+
+    /**
+     * ステータスのラベル対応表
+     */
+    public static $statusLabels = [
+        self::STATUS_OFF => '勤務外',
+        self::STATUS_WORKING  => '出勤中',
+        self::STATUS_LEAVE     => '退勤済',
+    ];
+
+    /** ステータス名を返すアクセサ */
+    public function getStatusLabelAttribute()
+    {
+        return self::$statusLabels[$this->status] ?? '不明';
+    }
+
+
     /**
      * リレーション：ユーザー(User)との１対１
      * 誰の勤怠か

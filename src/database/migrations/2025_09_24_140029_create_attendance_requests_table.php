@@ -31,6 +31,6 @@ class CreateAttendanceRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('attendance_requests');
     }
 }

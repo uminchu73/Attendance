@@ -29,6 +29,6 @@ class CreateAttendanceBreaksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('breaks');
+        Schema::dropIfExists('attendance_breaks');
     }
 }
