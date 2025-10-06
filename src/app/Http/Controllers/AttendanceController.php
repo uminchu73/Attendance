@@ -111,7 +111,8 @@ class AttendanceController extends Controller
         $attendances = Attendance::where('user_id', $user->id)
             ->whereBetween('work_date', [$startOfMonth, $endOfMonth])
             ->get()
-            ->keyBy('work_date'); // 日付でキーを持たせる
+            ->keyBy(fn($item) => $item->work_date->toDateString());
+
 
         Carbon::setLocale('ja');
 
@@ -121,4 +122,40 @@ class AttendanceController extends Controller
             'month'       => $month,
         ]);
     }
+
+
+    /**
+     * 詳細表示
+     */
+    public function show($idOrDate)
+    {
+        $user = Auth::user();
+        $attendance = Attendance::findOrCreateForUser($user->id, $idOrDate);
+
+        if (!$attendance) {
+            abort(404);
+        }
+
+        return view('detail', compact('attendance', 'user'));
+    }
+
+    /**
+     * 修正申請
+     */
+    public function request(Request $request, $attendanceId)
+    {
+        $user = Auth::user();
+        $attendance = Attendance::findOrFail($attendanceId);
+
+        // AttendanceRequestに登録
+        $attendance->requests()->create([
+            'user_id' => $user->id,
+            'type' => '修正',
+            'request_content' => json_encode($validated),
+            'status' => 0, // 承認待ち
+        ]);
+
+        return redirect()->route('attendance.detail', $attendanceId)->with('message', '修正申請を送信しました！');
+    }
+
 }

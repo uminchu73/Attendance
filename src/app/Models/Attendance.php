@@ -45,6 +45,17 @@ class Attendance extends Model
     }
 
     /**
+     * Carbonインスタンス
+     */
+    protected $casts = [
+        'work_date' => 'date',
+        'clock_in'  => 'datetime',
+        'clock_out' => 'datetime',
+        'break_in'  => 'datetime',
+        'break_out' => 'datetime',
+    ];
+
+    /**
      * 勤務時間休憩時間合計
      */
     // 勤務時間(秒)
@@ -164,6 +175,37 @@ class Attendance extends Model
         $this->update(['status' => self::STATUS_WORKING]);
     }
 
+
+    /**
+     * 詳細表示
+     */
+    public static function findOrCreateForUser($userId, $idOrDate)
+    {
+        //id の場合
+        if (is_numeric($idOrDate)) {
+            return self::where('user_id', $userId)
+                ->where('id', $idOrDate)
+                ->first();
+        }
+
+        // 日付の場合 (yyyy-mm-dd形式チェック)
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $idOrDate)) {
+            return self::firstOrCreate(
+                ['user_id' => $userId, 'work_date' => $idOrDate],
+                ['status' => self::STATUS_OFF]
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * 承認待ちがあるかチェック
+     */
+    public function hasPendingRequest(): bool
+    {
+        return $this->requests()->where('status', \App\Models\AttendanceRequest::STATUS_PENDING)->exists();
+    }
 
 
     /**

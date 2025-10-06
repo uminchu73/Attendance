@@ -17,6 +17,24 @@ class AttendanceRequest extends Model
         'status',
     ];
 
+
+    // 承認ステータス
+    const STATUS_PENDING  = 0; // 承認待ち
+    const STATUS_APPROVED = 1; // 承認済
+    const STATUS_DENIED   = 2; // 否認
+
+    public static $statusLabels = [
+        self::STATUS_PENDING  => '承認待ち',
+        self::STATUS_APPROVED => '承認',
+        self::STATUS_DENIED   => '否認',
+    ];
+
+    public function getStatusLabelAttribute()
+    {
+        return self::$statusLabels[$this->status] ?? '不明';
+    }
+
+
     /**
      * リレーション：ユーザー(User)との１対１
      * 誰が申請したか

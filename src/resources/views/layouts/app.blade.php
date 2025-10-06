@@ -36,7 +36,7 @@
                     @auth('web')
                     {{-- 勤怠ボタン --}}
                         <li class="header-nav__item">
-                            <a class="attendance" href="">勤怠</a>
+                            <a class="attendance" href="{{ route('home') }}">勤怠</a>
                         </li>
                         {{-- 勤怠一覧ボタン --}}
                         <li class="header-nav__item">

@@ -6,11 +6,13 @@
 
 @section('content')
 <div class="attendance-container">
-    <h2>勤務一覧</h2>
+    <h1>勤務一覧</h1>
 
     <div class="month-switch">
         <a href="?month={{ \Carbon\Carbon::parse($month)->subMonth()->format('Y-m') }}">← 前月</a>
-        <span>{{ \Carbon\Carbon::parse($month)->format('Y/m') }}</span>
+        <form method="get" style="display:inline;">
+            <input type="month" name="month" value="{{ \Carbon\Carbon::parse($month)->format('Y-m') }}" onchange="this.form.submit()">
+        </form>
         <a href="?month={{ \Carbon\Carbon::parse($month)->addMonth()->format('Y-m') }}">翌月 →</a>
     </div>
 
@@ -27,17 +29,34 @@
         </thead>
         <tbody>
             @foreach($dates as $date)
-                @php $attendance = $attendances[$date->toDateString()] ?? null; @endphp
+                @php
+                    $attendance = $attendances[$date->toDateString()] ?? null;
+                @endphp
                 <tr>
                     <td>{{ $date->format('m/d') }}({{ $date->locale('ja')->isoFormat('ddd') }})</td>
-                    <td>{{ $attendance?->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance?->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance?->break_time ?? '0:00' }}</td>
-                    <td>{{ $attendance?->work_time ?? '' }}</td>
+                    <td>
+                        @if($attendance && $attendance->clock_in)
+                            {{ \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($attendance && $attendance->clock_out)
+                            {{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') }}
+                        @endif
+                    </td>
                     <td>
                         @if($attendance)
-                            <a href="{{ route('attendance.detail', $attendance->id) }}">詳細</a>
+                            {{ $attendance->break_time ?? '0:00' }}
                         @endif
+                    </td>
+                    <td>
+                        @if($attendance)
+                            {{ $attendance->work_time }}
+                        @endif
+                    </td>
+                    <td>
+                        <a href="{{ route('attendance.detail', $attendance->id ?? $date->toDateString()) }}">詳細</a>
+
                     </td>
                 </tr>
             @endforeach

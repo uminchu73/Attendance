@@ -5,7 +5,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
-
+use App\Http\Controllers\AttendanceRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,14 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('attendance', [AttendanceController::class, 'index'])->name('home');
 
-    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])    ->name('attendance.clock-in');
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
     Route::post('/attendance/break-in', [AttendanceController::class, 'breakIn'])->name('attendance.break-in');
     Route::post('/attendance/break-out', [AttendanceController::class, 'breakOut'])->name('attendance.break-out');
 
     Route::get('attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
-    Route::get('attendance/detail/{attendance}', [AttendanceController::class, 'show'])
+    // 勤怠詳細表示（id）
+    Route::get('attendance/detail/{id}', [AttendanceController::class, 'show'])
         ->name('attendance.detail');
+    Route::post('attendance/{attendance}/request', [AttendanceRequestController::class, 'store'])->name('attendance.request');
 
 
 });
