@@ -12,6 +12,9 @@ class AttendanceTimeTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * 現在の日時情報がUIと同じ形式で出力されている
+     */
     public function test_attendance_time()
     {
         // ユーザー作成・ログイン

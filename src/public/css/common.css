@@ -35,8 +35,9 @@
     flex-wrap: wrap;
 }
 
-
-
+.request_list,
+.stuff_list,
+.attendance_list,
 .logout_button,
 .request_button,
 .summary_button,

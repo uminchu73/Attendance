@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\AdminLogoutController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
+
 use App\Http\Controllers\AttendanceRequestController;
 
 /*
@@ -51,23 +54,20 @@ Route::middleware('auth')->group(function () {
         ->name('request.list');
 });
 
-/*
+/**
  * 管理者ルート
- */
-// 未認証管理者（ログイン画面）
-Route::get('admin/login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware('guest:admin')
-    ->name('admin.login');
+*/
 
-Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest:admin')
-    ->name('admin.login.submit');
+Route::prefix('admin')->group(function () {
+    // 未ログイン時
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [AdminAuthenticatedSessionController::class, 'create'])->name('admin.login');
+        Route::post('login', [AdminAuthenticatedSessionController::class, 'store'])->name('admin.login.submit');
+    });
 
-// 認証済み管理者
-Route::get('admin/summary', [AdminController::class, 'index'])
-    ->middleware('auth:admin')
-    ->name('admin.summary');
-
-Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth:admin')
-    ->name('admin.logout');
+    // ログイン済み
+    Route::middleware('auth:admin')->group(function () {
+        Route::post('logout', [AdminLogoutController::class, 'logout'])->name('admin.logout');
+        Route::get('summary', [AdminController::class, 'index'])->name('admin.summary');
+    });
+});;

@@ -48,13 +48,8 @@ php artisan migrate --seed
 ```
 テーブルを作成し、ダミーデータを投入します。
 
-### 5. ストレージのシンボリックリンク作成
 
-```
-php artisan storage:link
-```
-
-### 6. テスト用データベース作成
+### ５. テスト用データベース作成
 
 ```
 docker-compose exec mysql bash
@@ -69,7 +64,17 @@ CREATE DATABASE demo_test;
 
 ## 初期ログイン情報
 
+#### 一般ユーザー
 
+メールアドレス：`user@example.com`
+
+パスワード：`userpass123`
+
+#### 管理者
+
+メールアドレス：`admin@example.com`
+
+パスワード：`adminpass123`
 
 ## 使用技術（実行環境）
 
