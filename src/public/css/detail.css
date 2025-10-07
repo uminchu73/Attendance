@@ -44,7 +44,6 @@ body {
 
 }
 
-
 /* 時刻入力 */
 .detail-table input[type="time"] {
     border: 1px solid #E1E1E1;
@@ -101,4 +100,10 @@ body {
 input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
+}
+
+.error {
+    font-size: 13px;
+    color: #FF5555;
+    margin-top: 5px;
 }

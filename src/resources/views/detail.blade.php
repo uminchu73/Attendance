@@ -56,6 +56,12 @@
                         <input type="time" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '') }}">
                         <span class="time-separator">〜</span>
                         <input type="time" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '') }}">
+                        @error('clock_in')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
+                        @error('clock_out')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
                     </td>
                 </tr>
                 @foreach($attendance->breaks as $i => $break)
@@ -65,6 +71,12 @@
                             <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '') }}">
                             <span class="time-separator">〜</span>
                             <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '') }}">
+                            @error("breaks.$i.start")
+                                <div class="error">{{ $message }}</div>
+                            @enderror
+                            @error("breaks.$i.end")
+                                <div class="error">{{ $message }}</div>
+                            @enderror
                         </td>
                     </tr>
                 @endforeach
@@ -76,12 +88,21 @@
                         <input type="time" name="breaks[new][start]" placeholder="開始">
                         <span class="time-separator">〜</span>
                         <input type="time" name="breaks[new][end]" placeholder="終了">
+                        @error("breaks.new.start")
+                            <div class="error">{{ $message }}</div>
+                        @enderror
+                        @error("breaks.new.end")
+                            <div class="error">{{ $message }}</div>
+                        @enderror
                     </td>
                 </tr>
                 <tr>
                     <th>備考</th>
                     <td>
                         <textarea name="note" class="request_content">{{ old('note') }}</textarea>
+                        @error('note')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
                     </td>
                 </tr>
             </table>

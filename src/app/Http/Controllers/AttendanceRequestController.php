@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\AttendanceRequestForm;
+use App\Http\Requests\AttendanceBreakRequest;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -26,7 +27,7 @@ class AttendanceRequestController extends Controller
         $data = $request->validated();
 
         // 申請作成
-        AttendanceRequest::create([
+        $attendanceRequest = AttendanceRequest::create([
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,
             'type' => '修正',
@@ -36,9 +37,20 @@ class AttendanceRequestController extends Controller
             'status' => AttendanceRequest::STATUS_PENDING,
         ]);
 
-        return redirect()->back()->with('message', '修正申請を送信しました。');
+        // 休憩の保存
+        if (!empty($data['breaks'])) {
+            foreach ($data['breaks'] as $break) {
+                if (!empty($break['start']) && !empty($break['end'])) {
+                    $attendanceRequest->breaks()->create([
+                        'break_start' => $break['start'],
+                        'break_end' => $break['end'],
+                    ]);
+                }
+            }
+        }
     }
 
+    
     /**
      * 申請一覧
      */
