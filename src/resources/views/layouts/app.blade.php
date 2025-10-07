@@ -44,7 +44,7 @@
                         </li>
                         {{-- 申請ボタン --}}
                         <li class="header-nav__item">
-                            <a class="request_button" href="">申請</a>
+                            <a class="request_button" href="{{ route('request.list') }}">申請</a>
                         </li>
                         <li class="header-nav__item">
                         {{-- ログアウトボタン --}}

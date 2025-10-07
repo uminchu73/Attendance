@@ -10,8 +10,18 @@
 
     @if($attendance->hasPendingRequest())
         <table class="detail-table">
-            <tr><th>名前</th><td>{{ $user->name }}</td></tr>
-            <tr><th>日付</th><td>{{ $attendance->work_date->format('Y年n月j日') }}</td></tr>
+            <tr>
+                <th>名前</th>
+                <td>
+                    {{ $user->name }}
+                </td>
+            </tr>
+            <tr>
+                <th>日付</th>
+                <td>
+                    {{ $attendance->work_date->format('Y年n月j日') }}
+                </td>
+            </tr>
             <tr>
                 <th>出勤・退勤</th>
                 <td>
@@ -28,9 +38,12 @@
                     @endforeach
                 </td>
             </tr>
-            <tr><th>備考</th><td>{{ $attendance->note ?? 'なし' }}</td></tr>
+            <tr>
+                <th>備考</th>
+                <td>{{ $attendance->note ?? 'なし' }}</td>
+            </tr>
         </table>
-        <p>承認待ちのため申請できません。</p>
+        <p>* 承認待ちのため修正はできません。</p>
     @else
         <form action="{{ route('attendance.request', $attendance->id) }}" method="POST">
             @csrf
@@ -41,30 +54,38 @@
                     <th>出勤・退勤</th>
                     <td>
                         <input type="time" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '') }}">
-                        〜
+                        <span class="time-separator">〜</span>
                         <input type="time" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '') }}">
                     </td>
                 </tr>
-                <tr>
-                    <th>休憩</th>
-                    <td>
-                        @foreach($attendance->breaks as $i => $break)
+                @foreach($attendance->breaks as $i => $break)
+                    <tr>
+                        <th>休憩</th>
+                        <td>
                             <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '') }}">
-                            〜
+                            <span class="time-separator">〜</span>
                             <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '') }}">
-                        @endforeach
-                        {{-- 新しい休憩 --}}
+                        </td>
+                    </tr>
+                @endforeach
+
+                {{-- 新しい休憩 --}}
+                <tr>
+                    <th>追加休憩</th>
+                    <td>
                         <input type="time" name="breaks[new][start]" placeholder="開始">
-                        〜
+                        <span class="time-separator">〜</span>
                         <input type="time" name="breaks[new][end]" placeholder="終了">
                     </td>
                 </tr>
                 <tr>
                     <th>備考</th>
-                    <td><textarea name="note">{{ old('note', $attendance->note) }}</textarea></td>
+                    <td>
+                        <textarea name="note" class="request_content">{{ old('note') }}</textarea>
+                    </td>
                 </tr>
             </table>
-            <button type="submit" class="btn btn-primary">修正申請</button>
+            <button type="submit" class="btn btn-primary">修正</button>
         </form>
     @endif
 </div>

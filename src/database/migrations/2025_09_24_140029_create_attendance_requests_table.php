@@ -18,8 +18,10 @@ class CreateAttendanceRequestsTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('attendance_id')->constrained('attendances')->onDelete('cascade');
             $table->string('type', 50);
-            $table->text('request_content');
-            $table->tinyInteger('status')->default(0); //0=承認待ち,1=承認,2=否認
+            $table->time('clock_in')->nullable();
+            $table->time('clock_out')->nullable();
+            $table->text('note')->nullable();
+            $table->tinyInteger('status')->default(0); // 0=承認待ち, 1=承認, 2=否認
             $table->timestamps();
         });
     }

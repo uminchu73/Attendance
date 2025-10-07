@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\AttendanceBreak;
+use App\Models\AttendanceRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -139,23 +141,6 @@ class AttendanceController extends Controller
         return view('detail', compact('attendance', 'user'));
     }
 
-    /**
-     * 修正申請
-     */
-    public function request(Request $request, $attendanceId)
-    {
-        $user = Auth::user();
-        $attendance = Attendance::findOrFail($attendanceId);
 
-        // AttendanceRequestに登録
-        $attendance->requests()->create([
-            'user_id' => $user->id,
-            'type' => '修正',
-            'request_content' => json_encode($validated),
-            'status' => 0, // 承認待ち
-        ]);
-
-        return redirect()->route('attendance.detail', $attendanceId)->with('message', '修正申請を送信しました！');
-    }
 
 }

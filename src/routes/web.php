@@ -45,9 +45,10 @@ Route::middleware('auth')->group(function () {
     // 勤怠詳細表示（id）
     Route::get('attendance/detail/{id}', [AttendanceController::class, 'show'])
         ->name('attendance.detail');
-    Route::post('attendance/{attendance}/request', [AttendanceRequestController::class, 'store'])->name('attendance.request');
 
-
+    Route::post('attendance/{id}/request', [AttendanceRequestController::class, 'store'])->name('attendance.request');
+    Route::get('stamp_correction_request/list', [AttendanceRequestController::class, 'requestsList'])
+        ->name('request.list');
 });
 
 /*

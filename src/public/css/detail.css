@@ -1,0 +1,104 @@
+body {
+    background-color: #F0EFF2;
+}
+
+/* コンテナ */
+.attendance-detail {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 50px;
+}
+
+/* 見出し */
+.attendance-detail h1 {
+    border-left: 8px solid #000;
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
+/* テーブル */
+.detail-table {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.detail-table tr {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.detail-table tr:last-child {
+    border-bottom: none;
+}
+
+.detail-table th{
+    color: #737373;
+    padding: 16px 20px
+}
+
+.detail-table td {
+    padding: 16px 20px;
+
+}
+
+
+/* 時刻入力 */
+.detail-table input[type="time"] {
+    border: 1px solid #E1E1E1;
+    border-radius: 4px;
+    padding: 6px 20px;
+    width: 130px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.time-separator {
+    display: inline-block;
+    margin: 0 40px;
+    font-weight: bold;
+}
+
+/* テキストエリア */
+.detail-table textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    resize: none;
+}
+
+/* 修正ボタン */
+.btn-primary {
+    display: block;
+    margin-left: auto;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* 承認待ちメッセージ */
+.attendance-detail p {
+    text-align: right;
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FF000080;
+}
+
+/* 時計アイコンを消す */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Http\Requests\AttendanceRequestForm;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -13,7 +14,7 @@ class AttendanceRequestController extends Controller
     /**
      * 修正申請作成
      */
-    public function store(Request $request, $attendanceId)
+    public function store(AttendanceRequestForm $request, $attendanceId)
     {
         $attendance = Attendance::findOrFail($attendanceId);
 
@@ -22,32 +23,41 @@ class AttendanceRequestController extends Controller
             return redirect()->back()->with('error', '承認待ちのため申請できません。');
         }
 
-        // バリデーション
-        $request->validate([
-            'clock_in' => 'required|date_format:H:i',
-            'clock_out' => 'required|date_format:H:i|after:clock_in',
-            'note' => 'nullable|string',
-            'breaks.*.start' => 'nullable|date_format:H:i',
-            'breaks.*.end'   => 'nullable|date_format:H:i|after:breaks.*.start',
-        ]);
-
-        // 修正内容をJSONにまとめる（文字列でもOK）
-        $requestContent = [
-            'clock_in'  => $request->clock_in,
-            'clock_out' => $request->clock_out,
-            'breaks'    => $request->breaks ?? [],
-            'note'      => $request->note,
-        ];
+        $data = $request->validated();
 
         // 申請作成
         AttendanceRequest::create([
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,
             'type' => '修正',
-            'request_content' => json_encode($requestContent),
+            'clock_in' => $data['clock_in'] ?? null,
+            'clock_out' => $data['clock_out'] ?? null,
+            'note' => $data['note'] ?? null,
             'status' => AttendanceRequest::STATUS_PENDING,
         ]);
 
         return redirect()->back()->with('message', '修正申請を送信しました。');
+    }
+
+    /**
+     * 申請一覧
+     */
+    public function requestsList(Request $request)
+    {
+        $user = Auth::user();
+        $status = $request->query('status'); // ← URLパラメータ取得
+
+        $query = AttendanceRequest::with('attendance.user')
+        ->orderBy('created_at', 'desc');
+
+        // パラメータに応じて絞り込み
+        if ($status === 'pending') {
+            $query->where('status', AttendanceRequest::STATUS_PENDING);
+        } elseif ($status === 'approved') {
+            $query->where('status', AttendanceRequest::STATUS_APPROVED);
+        }
+            $requests = $query->get();
+
+        return view('request', compact('requests', 'status'));
     }
 }

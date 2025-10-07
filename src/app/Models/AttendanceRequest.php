@@ -13,7 +13,9 @@ class AttendanceRequest extends Model
         'user_id',
         'attendance_id',
         'type',
-        'request_content',
+        'clock_in',
+        'clock_out',
+        'note',
         'status',
     ];
 
