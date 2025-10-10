@@ -70,4 +70,4 @@ Route::prefix('admin')->group(function () {
         Route::post('logout', [AdminLogoutController::class, 'logout'])->name('admin.logout');
         Route::get('summary', [AdminController::class, 'index'])->name('admin.summary');
     });
-});;
+});

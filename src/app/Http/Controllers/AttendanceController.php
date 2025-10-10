@@ -40,9 +40,9 @@ class AttendanceController extends Controller
 
         try {
             $attendance->clockIn();
-            return redirect()->back()->with('message', '出勤完了しました！');
+            return redirect('/attendance')->with('message', '出勤完了しました！');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect('/attendance')->with('error', $e->getMessage());
         }
     }
 
@@ -55,9 +55,9 @@ class AttendanceController extends Controller
 
         try {
             $attendance->clockOut();
-            return redirect()->back()->with('message', '退勤完了しました！');
+            return redirect('/attendance')->with('message', '退勤完了しました！');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect('/attendance')->with('error', $e->getMessage());
         }
     }
 
@@ -70,9 +70,9 @@ class AttendanceController extends Controller
 
         try {
             $attendance->startBreak();
-            return redirect()->back()->with('message', '休憩開始しました！');
+            return redirect('/attendance')->with('message', '休憩開始しました！');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect('/attendance')->with('error', $e->getMessage());
         }
     }
 
@@ -85,9 +85,9 @@ class AttendanceController extends Controller
 
         try {
             $attendance->endBreak();
-            return redirect()->back()->with('message', '休憩終了しました！');
+            return redirect('/attendance')->with('message', '休憩終了しました！');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect('/attendance')->with('error', $e->getMessage());
         }
     }
 
