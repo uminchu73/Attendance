@@ -13,8 +13,7 @@ class AdminAuthenticatedSessionController extends FortifyController
 {
     public function create(Request $request): LoginViewResponse
     {
-        // Fortify の LoginViewResponse 契約を使って、
-        // 独自の Blade を返すようにする
+        //FortifyのLoginViewResponse契約を使って、独自のBladeを返すようにする
         return app(LoginViewResponse::class, [
             'view' => 'admin.auth.login', // 管理者用ログインビュー
         ]);
@@ -22,10 +21,10 @@ class AdminAuthenticatedSessionController extends FortifyController
 
     public function store(LoginRequest $request)
     {
-        // 一時的に Fortify の guard を admin に差し替える
+        //一時的にFortifyのguardをadminに差し替える
         config(['fortify.guard' => 'admin']);
 
-        // Fortify 標準のログイン処理を呼び出す
+        // Fortify標準のログイン処理を呼び出す
         return parent::store($request);
     }
 }

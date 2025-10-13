@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
-use App\Http\Requests\AttendanceRequestForm;
+use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\AttendanceBreakRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,18 +15,16 @@ class AttendanceRequestController extends Controller
     /**
      * 修正申請作成
      */
-    public function store(AttendanceRequestForm $request, $attendanceId)
+    public function store(StoreAttendanceRequest $request, $attendanceId)
     {
         $attendance = Attendance::findOrFail($attendanceId);
 
-        // 承認待ちがある場合はブロック
         if ($attendance->hasPendingRequest()) {
             return redirect()->back()->with('error', '承認待ちのため申請できません。');
         }
 
         $data = $request->validated();
 
-        // 申請作成
         $attendanceRequest = AttendanceRequest::create([
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,
@@ -37,20 +35,12 @@ class AttendanceRequestController extends Controller
             'status' => AttendanceRequest::STATUS_PENDING,
         ]);
 
-        // 休憩の保存
-        if (!empty($data['breaks'])) {
-            foreach ($data['breaks'] as $break) {
-                if (!empty($break['start']) && !empty($break['end'])) {
-                    $attendanceRequest->breaks()->create([
-                        'break_start' => $break['start'],
-                        'break_end' => $break['end'],
-                    ]);
-                }
-            }
-        }
+
+        return redirect()->back()->with('message', '修正を申請しました！');
     }
 
-    
+
+
     /**
      * 申請一覧
      */

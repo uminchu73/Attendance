@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AttendanceRequestForm extends FormRequest
+class StoreAttendanceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,14 @@ class AttendanceRequestForm extends FormRequest
             'clock_in' => ['required', 'date_format:H:i'],
             'clock_out' => ['required', 'date_format:H:i', 'after:clock_in'],
             'note' => ['required', 'string'],
+
+            //既存休憩
+            'breaks.*.start' => ['nullable', 'date_format:H:i'],
+            'breaks.*.end'   => ['nullable', 'date_format:H:i'],
+
+            //新規休憩
+            'breaks.new.start' => ['nullable', 'date_format:H:i'],
+            'breaks.new.end'   => ['nullable', 'date_format:H:i'],
 
             // 出勤・退勤の整合性チェック
             'clock_out' => [

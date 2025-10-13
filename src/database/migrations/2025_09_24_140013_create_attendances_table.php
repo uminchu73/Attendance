@@ -20,6 +20,7 @@ class CreateAttendancesTable extends Migration
             $table->time('clock_in')->nullable();
             $table->time('clock_out')->nullable();
             $table->tinyInteger('status')->default(0); //0=勤務外,1=出勤中,2=退勤済
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

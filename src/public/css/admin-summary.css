@@ -1,0 +1,62 @@
+body {
+    background-color: #F0EFF2;
+    ;
+}
+
+.attendance-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.attendance-container h1 {
+    border-left: 8px solid #000;
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
+.day-switch {
+    display: flex;
+    background-color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 38px;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.day-switch input[type="date"] {
+    padding: 6px 20px;
+    font-size: 16px;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+    padding: 12px;
+    color: #737373;
+    border-bottom: 1px solid #E1E1E1;
+    text-align: center;
+}
+
+.attendance-table th {
+    border-bottom: 3px solid #E1E1E1;
+}

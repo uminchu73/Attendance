@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="alert">
-                {{-- メッセージ表示 --}}
+        {{-- メッセージ表示 --}}
         @if(session('message'))
             <div class="alert-success">
                 {{ session('message') }}

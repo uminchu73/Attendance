@@ -57,6 +57,8 @@ class AttendanceRequest extends Model
 
     public function breaks()
     {
-        return $this->hasMany(AttendanceRequestBreak::class);
+        //修正申請に紐づく元の休憩レコード
+        return $this->hasMany(AttendanceBreak::class, 'attendance_id', 'attendance_id');
     }
+
 }

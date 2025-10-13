@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-detail.css') }}">
 @endsection
 
 @section('content')
@@ -58,7 +58,7 @@
         </table>
         <p>* 承認待ちのため修正はできません。</p>
     @else
-        <form action="{{ route('attendance.request', $attendance->id) }}" method="POST">
+        <form action="{{ route('admin.attendance.update', $attendance->id) }}" method="POST">
             @csrf
             <table class="detail-table">
                 <tr><th>名前</th><td>{{ $user->name }}</td></tr>
@@ -81,9 +81,10 @@
                     <tr>
                         <th>休憩</th>
                         <td>
-                            <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '') }}">
+                            <input type="hidden" name="breaks[{{ $i }}][id]" value="{{ $break->id }}">
+                            <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start?->format('H:i')) }}">
                             <span class="time-separator">〜</span>
-                            <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '') }}">
+                            <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end?->format('H:i')) }}">
                             @error("breaks.$i.start")
                                 <div class="error">{{ $message }}</div>
                             @enderror
@@ -112,7 +113,7 @@
                 <tr>
                     <th>備考</th>
                     <td>
-                        <textarea name="note" class="request_content">{{ old('note') }}</textarea>
+                        <textarea name="note" class="request_content">{{ old('note', $attendance->note) }}</textarea>
                         @error('note')
                             <div class="error">{{ $message }}</div>
                         @enderror

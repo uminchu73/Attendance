@@ -44,8 +44,6 @@
                         </li>
                         <li class="header-nav__item">
                             <form action="{{ route('admin.logout') }}" method="POST">
-
-
                                 @csrf
                                 <button class="logout_button" type="submit">ログアウト</button>
                             </form>

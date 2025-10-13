@@ -2,13 +2,6 @@ body {
     background-color: #F0EFF2;
 }
 
-/* コンテナ */
-.attendance-detail {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 50px;
-}
-
 .alert-success {
     background-color: #d1e7dd;
     color: #0f5132;
@@ -24,6 +17,13 @@ body {
     border-color: #f5c2c7;
     padding: 10px 20px;
     font-weight: bold;
+}
+
+/* コンテナ */
+.attendance-detail {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 50px;
 }
 
 /* 見出し */
@@ -51,7 +51,7 @@ body {
     border-bottom: none;
 }
 
-.detail-table th{
+.detail-table th {
     color: #737373;
     padding: 16px 20px
 }

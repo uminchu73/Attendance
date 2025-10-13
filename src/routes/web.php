@@ -5,7 +5,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AdminLogoutController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AttendanceController;
 
 use App\Http\Controllers\AttendanceRequestController;
@@ -68,6 +68,10 @@ Route::prefix('admin')->group(function () {
     // ログイン済み
     Route::middleware('auth:admin')->group(function () {
         Route::post('logout', [AdminLogoutController::class, 'logout'])->name('admin.logout');
-        Route::get('summary', [AdminController::class, 'index'])->name('admin.summary');
+        Route::get('attendance', [AdminController::class, 'index'])->name('admin.summary');
+        Route::get('attendance/{id}', [AdminController::class, 'show'])
+        ->name('admin.detail');
+
+        Route::post('attendance/{id}/update', [AdminController::class, 'update'])->name('admin.attendance.update');
     });
 });
