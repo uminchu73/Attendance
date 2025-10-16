@@ -17,39 +17,33 @@ class AttendanceSeeder extends Seeder
      */
     public function run()
     {
-        //初期ユーザー取得
-        $user = User::first();
-        if (!$user) return;
+        $users = User::all();
 
-        $months = [
-            Carbon::now()->subMonth(),
-            Carbon::now()->subMonth(2)
+        // 勤怠メモの候補を準備
+        $notes = [
+            '遅刻（電車遅延）',
+            '早出対応（開店準備）',
+            '体調不良で早退',
+            '通常勤務',
+            '外出対応（客先訪問）',
+            '残業1時間',
+            'システムトラブル対応',
+            '会議対応'
         ];
 
-        foreach ($months as $month) {
-            $start = $month->copy()->startOfMonth();
-            $end   = $month->copy()->endOfMonth();
+        foreach ($users as $user) {
+            // 過去60日分の日付を生成
+            $dates = collect(range(0, 59))->map(fn($i) => Carbon::today()->subDays($i));
 
-            for ($date = $start; $date->lte($end); $date->addDay()) {
-
-                //土日を休みにする
-                if ($date->isWeekend()) {
-                    continue; // スキップ
+            foreach ($dates as $date) {
+                // 70%の確率で勤怠データを作る
+                if (rand(1, 100) <= 70) {
+                    Attendance::factory()->create([
+                        'user_id' => $user->id,
+                        'work_date' => $date->toDateString(),
+                        'note' => rand(1, 100) <= 30 ? $notes[array_rand($notes)] : null,
+                    ]);
                 }
-                //平日の勤怠作成
-                $attendance = Attendance::create([
-                    'user_id'   => $user->id,
-                    'work_date' => $date->toDateString(),
-                    'clock_in'  => $date->copy()->setHour(9)->setMinute(0)->format('H:i:s'),
-                    'clock_out' => $date->copy()->setHour(18)->setMinute(0)->format('H:i:s'),
-                    'status'    => Attendance::STATUS_LEAVE,
-                ]);
-
-                //休憩
-                $attendance->breaks()->create([
-                    'break_start' => $date->copy()->setHour(12)->setMinute(0)->format('H:i:s'),
-                    'break_end'   => $date->copy()->setHour(13)->setMinute(0)->format('H:i:s'),
-                ]);
             }
         }
     }

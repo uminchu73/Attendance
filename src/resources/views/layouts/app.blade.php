@@ -37,7 +37,7 @@
                             <a class="attendance_list" href="{{ route('admin.summary') }}">勤怠一覧</a>
                         </li>
                         <li class="header-nav__item">
-                            <a class="stuff_list" href="#">スタッフ一覧</a>
+                            <a class="stuff_list" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
                         </li>
                         <li class="header-nav__item">
                             <a class="request_list" href="#">申請一覧</a>

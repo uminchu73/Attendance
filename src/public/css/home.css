@@ -1,0 +1,22 @@
+/* 全体を中央寄せ */
+.home-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 40px;
+}
+
+/* 共通ボタンスタイル */
+.home-container a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000;
+}
+

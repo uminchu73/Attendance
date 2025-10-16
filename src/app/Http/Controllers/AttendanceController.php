@@ -98,18 +98,18 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        // 月の指定（デフォルトは今月）
+        //月の指定（デフォルトは今月）
         $month = $request->input('month', Carbon::now()->format('Y-m'));
         $startOfMonth = Carbon::parse($month)->startOfMonth();
         $endOfMonth   = Carbon::parse($month)->endOfMonth();
 
-            // その月の全日付を生成
+        //カレンダーを作る
         $dates = [];
         for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
             $dates[] = $date->copy();
         }
 
-        // ユーザーの勤怠データを取得
+        //ユーザーの勤怠データを取得
         $attendances = Attendance::where('user_id', $user->id)
             ->whereBetween('work_date', [$startOfMonth, $endOfMonth])
             ->get()

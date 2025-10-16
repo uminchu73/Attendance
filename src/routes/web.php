@@ -6,8 +6,8 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AdminLogoutController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminStaffController;
 use App\Http\Controllers\AttendanceController;
-
 use App\Http\Controllers\AttendanceRequestController;
 
 /*
@@ -21,7 +21,7 @@ use App\Http\Controllers\AttendanceRequestController;
 |
 */
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 /**
@@ -43,12 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
     Route::post('/attendance/break-in', [AttendanceController::class, 'breakIn'])->name('attendance.break-in');
     Route::post('/attendance/break-out', [AttendanceController::class, 'breakOut'])->name('attendance.break-out');
-
     Route::get('attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
     // 勤怠詳細表示（id）
-    Route::get('attendance/detail/{id}', [AttendanceController::class, 'show'])
-        ->name('attendance.detail');
-
+    Route::get('attendance/detail/{id}', [AttendanceController::class, 'show'])->name('attendance.detail');
     Route::post('attendance/{id}/request', [AttendanceRequestController::class, 'store'])->name('attendance.request');
     Route::get('stamp_correction_request/list', [AttendanceRequestController::class, 'requestsList'])
         ->name('request.list');
@@ -68,10 +65,11 @@ Route::prefix('admin')->group(function () {
     // ログイン済み
     Route::middleware('auth:admin')->group(function () {
         Route::post('logout', [AdminLogoutController::class, 'logout'])->name('admin.logout');
-        Route::get('attendance', [AdminController::class, 'index'])->name('admin.summary');
-        Route::get('attendance/{id}', [AdminController::class, 'show'])
-        ->name('admin.detail');
-
+        Route::get('attendance/list', [AdminController::class, 'index'])->name('admin.summary');
+        Route::get('attendance/{id}', [AdminController::class, 'show'])->name('admin.detail');
         Route::post('attendance/{id}/update', [AdminController::class, 'update'])->name('admin.attendance.update');
+
+        Route::get('staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.list');
+        Route::get('attendance/staff/{id}', [AdminStaffController::class, 'show'])->name('admin.staff.attendance');
     });
 });
