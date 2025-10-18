@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
@@ -12,11 +13,11 @@ use Carbon\Carbon;
 
 class AdminStaffController extends Controller
 {
+    /**
+     * スタッフ一覧表示
+     */
     public function index()
     {
-        /**
-         * スタッフ一覧表示
-         */
         // 一般ユーザーのみ取得
         $users = User::all();
 
@@ -58,4 +59,56 @@ class AdminStaffController extends Controller
             'month'       => $month,
         ]);
     }
+
+
+    /**
+     * CSV出力
+     */
+    public function exportCsv($id, Request $request)
+    {
+        $user = User::findOrFail($id);
+
+        //月の指定
+        $month = $request->input('month', Carbon::now()->format('Y-m'));
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+        $endOfMonth   = Carbon::parse($month)->endOfMonth();
+
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('work_date', [$startOfMonth, $endOfMonth])
+            ->get();
+
+        //CSVヘッダー
+        $headers = ['日付', '出勤', '退勤', '休憩', '合計', '備考'];
+
+        // CSV データ作成
+        $csvData = [];
+        foreach ($attendances as $att) {
+            $csvData[] = [
+                $att->work_date->format('Y-m-d'),
+                $att->clock_in ? $att->clock_in->format('H:i') : '',
+                $att->clock_out ? $att->clock_out->format('H:i') : '',
+                $att->break_time,
+                $att->work_time,
+                $att->note ?? '',
+            ];
+}
+
+        // CSV 文字列作成
+        $callback = function() use ($headers, $csvData) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $headers);
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        $filename = $user->name . '_勤怠_' . $month . '.csv';
+
+        return Response::stream($callback, 200, [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename={$filename}",
+        ]);
+    }
+
 }

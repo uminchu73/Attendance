@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
+use Carbon\Carbon;
 
 
 class AdminController extends Controller
@@ -23,6 +24,7 @@ class AdminController extends Controller
         return view('admin.summary', compact('attendances', 'date'));
     }
 
+    
     /**
      * 詳細表示
      */
@@ -33,6 +35,7 @@ class AdminController extends Controller
 
         return view('admin.detail', compact('attendance', 'user'));
     }
+
 
     /**
      * 修正更新

@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('attendance', [AttendanceController::class, 'index'])->name('home');
 
-    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])    ->name('attendance.clock-in');
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
     Route::post('/attendance/break-in', [AttendanceController::class, 'breakIn'])->name('attendance.break-in');
     Route::post('/attendance/break-out', [AttendanceController::class, 'breakOut'])->name('attendance.break-out');
@@ -71,5 +71,6 @@ Route::prefix('admin')->group(function () {
 
         Route::get('staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.list');
         Route::get('attendance/staff/{id}', [AdminStaffController::class, 'show'])->name('admin.staff.attendance');
+        Route::post('staff/{id}/export', [AdminStaffController::class, 'exportCsv'])->name('admin.staff.export');
     });
 });

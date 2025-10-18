@@ -55,12 +55,18 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('attendance.detail', $attendance->id ?? $date->toDateString()) }}">詳細</a>
+                        <a href="{{ route('admin.detail', $attendance->id ?? $date->toDateString()) }}">詳細</a>
 
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    {{-- CSV出力 --}}
+        <form method="POST" action="{{ route('admin.staff.export', $user->id) }}">
+            @csrf
+            <input type="hidden" name="month" value="{{ $month }}">
+            <button type="submit" class="btn-export">CSV出力</button>
+        </form>
 </div>
 @endsection
