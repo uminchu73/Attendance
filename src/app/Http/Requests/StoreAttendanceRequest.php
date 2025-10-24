@@ -24,19 +24,7 @@ class StoreAttendanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'clock_in' => ['required', 'date_format:H:i'],
-            'clock_out' => ['required', 'date_format:H:i', 'after:clock_in'],
-            'note' => ['required', 'string'],
-
-            //既存休憩
-            'breaks.*.start' => ['nullable', 'date_format:H:i'],
-            'breaks.*.end'   => ['nullable', 'date_format:H:i'],
-
-            //新規休憩
-            'breaks.new.start' => ['nullable', 'date_format:H:i'],
-            'breaks.new.end'   => ['nullable', 'date_format:H:i'],
-
-            // 出勤・退勤の整合性チェック
+            'clock_in'  => ['required', 'date_format:H:i'],
             'clock_out' => [
                 'required',
                 'date_format:H:i',
@@ -45,15 +33,16 @@ class StoreAttendanceRequest extends FormRequest
                     if ($clock_in && $value && $value <= $clock_in) {
                         $fail('出勤時間もしくは退勤時間が不適切な値です');
                     }
-                }
+                },
             ],
+            'note' => ['required', 'string'],
 
-            // 既存休憩と新しい休憩を一緒にチェック
+            //既存・新規休憩をまとめて検証
             'breaks.*.start' => [
                 'nullable',
                 'date_format:H:i',
                 function ($attribute, $value, $fail) {
-                    $index = explode('.', $attribute)[1]; // 0, 1, new
+                    $index = explode('.', $attribute)[1];
                     $end = $this->input("breaks.$index.end");
                     $clock_in = $this->input('clock_in');
                     $clock_out = $this->input('clock_out');
@@ -64,7 +53,7 @@ class StoreAttendanceRequest extends FormRequest
                     if ($value && ($value < $clock_in || $value > $clock_out)) {
                         $fail('休憩時間が不適切な値です');
                     }
-                }
+                },
             ],
             'breaks.*.end' => [
                 'nullable',
@@ -81,7 +70,7 @@ class StoreAttendanceRequest extends FormRequest
                     if ($value && ($value < $clock_in || $value > $clock_out)) {
                         $fail('休憩時間もしくは退勤時間が不適切な値です');
                     }
-                }
+                },
             ],
         ];
     }

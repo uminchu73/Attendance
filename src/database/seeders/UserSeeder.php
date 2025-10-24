@@ -15,6 +15,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        //固定の初期ユーザー（テストログイン用）
+        User::create([
+            'name' => 'テスト太郎',
+            'email' => 'user@example.com',
+            'password' => Hash::make('userpass123'),
+        ]);
+
         // スタッフ10人を作成
         User::factory(15)->create();
     }

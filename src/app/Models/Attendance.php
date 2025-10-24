@@ -225,8 +225,9 @@ class Attendance extends Model
 
     public function breaks()
     {
-        return $this->hasMany(AttendanceBreak::class);
+        return $this->hasMany(\App\Models\AttendanceBreak::class, 'attendance_id', 'id');
     }
+
 
     /**
      * リレーション：修正申請(AttendanceRequest)との1対多

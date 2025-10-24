@@ -55,10 +55,14 @@ class AttendanceRequest extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    public function breaks()
+
+    /**
+    * リレーション：修正申請に紐づく休憩（AttendanceBreak）との1対多
+    * 承認時に勤怠へコピーするために使用
+    */
+    public function attendanceBreaks()
     {
-        //修正申請に紐づく元の休憩レコード
-        return $this->hasMany(AttendanceBreak::class, 'attendance_id', 'attendance_id');
+        return $this->hasMany(AttendanceBreak::class, 'attendance_request_id');
     }
 
 }

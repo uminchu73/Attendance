@@ -1,0 +1,82 @@
+body {
+    background-color: #F0EFF2;
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+    padding: 10px 20px;
+    font-weight: bold;
+
+}
+
+/* コンテナ */
+.attendance-detail {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 50px;
+}
+
+/* 見出し */
+.attendance-detail h1 {
+    border-left: 8px solid #000;
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
+/* テーブル */
+.detail-table {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.detail-table tr {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.detail-table tr:last-child {
+    border-bottom: none;
+}
+
+.detail-table th {
+    color: #737373;
+    padding: 16px 20px
+}
+
+.detail-table td {
+    padding: 16px 20px;
+
+}
+
+/* 承認ボタン */
+.approve-btn {
+    display: block;
+    margin-left: auto;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.complete-btn {
+    display: block;
+    margin-left: auto;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #696969;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+

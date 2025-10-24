@@ -11,6 +11,7 @@ class AttendanceBreak extends Model
 
     protected $fillable = [
         'attendance_id',
+        'attendance_request_id',
         'break_start',
         'break_end',
     ];
@@ -33,4 +34,10 @@ class AttendanceBreak extends Model
     {
         return $this->belongsTo(Attendance::class);
     }
+
+    public function attendanceRequest()
+    {
+        return $this->belongsTo(AttendanceRequest::class);
+    }
+
 }
