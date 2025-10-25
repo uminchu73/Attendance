@@ -21,7 +21,7 @@
 <div class="attendance-detail">
     <h1>勤怠詳細</h1>
 
-    @if($attendance->hasPendingRequest())
+    @if($attendance->hasPendingRequest() && isset($pendingRequest))
         <table class="detail-table">
             <tr>
                 <th>名前</th>
@@ -38,22 +38,23 @@
             <tr>
                 <th>出勤・退勤</th>
                 <td>
-                    {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '未入力' }} 〜
-                    {{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '未入力' }}
+                    {{ $pendingRequest->clock_in ? \Carbon\Carbon::parse($pendingRequest->clock_in)->format('H:i') : '未入力' }} 〜
+                    {{ $pendingRequest->clock_out ? \Carbon\Carbon::parse($pendingRequest->clock_out)->format('H:i') : '未入力' }}
                 </td>
             </tr>
             <tr>
                 <th>休憩</th>
                 <td>
-                    @foreach($attendance->breaks as $break)
-                        {{ $break->break_start?->format('H:i') ?? '' }} 〜 {{ $break->break_end?->format('H:i') ?? '' }}
+                    @foreach($pendingRequest->attendanceBreaks as $break)
+                        {{ $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '' }} 〜
+                        {{ $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '' }}
                         @if(!$loop->last)<br>@endif
                     @endforeach
                 </td>
             </tr>
             <tr>
                 <th>備考</th>
-                <td>{{ $attendance->note ?? 'なし' }}</td>
+                <td>{{ $pendingRequest->note ?? 'なし' }}</td>
             </tr>
         </table>
         <p>* 承認待ちのため修正はできません。</p>

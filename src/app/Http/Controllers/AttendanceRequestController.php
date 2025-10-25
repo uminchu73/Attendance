@@ -137,31 +137,22 @@ class AttendanceRequestController extends Controller
             'note'      => $requestData->note,
         ]);
 
-        // ② 既存の休憩データを削除して、申請された休憩を反映
-        $attendance->breaks()->delete();
-
-        unset($attendance->breaks);
-        $attendance->refresh();
-
-        // attendance_breaks に申請時の休憩が存在する場合のみ反映
+        //②申請に休憩データが含まれている場合のみ、休憩を更新
         $breaks = \App\Models\AttendanceBreak::where('attendance_request_id', $requestData->id)->get();
 
-        foreach ($breaks as $break) {
-            //Carbonでも文字列でも対応できるように変換
-            $start = $break->break_start instanceof Carbon
-                ? $break->break_start->format('H:i:s')
-                : (string)$break->break_start;
+        if ($breaks->isNotEmpty()) {
+            //既存の休憩データを削除
+            $attendance->breaks()->delete();
 
-            $end = $break->break_end instanceof Carbon
-                ? $break->break_end->format('H:i:s')
-                : (string)$break->break_end;
-
-            \App\Models\AttendanceBreak::create([
-                'attendance_id'         => $attendance->id,
-                'attendance_request_id' => null,
-                'break_start'           => $start ?: null,
-                'break_end'             => $end ?: null,
-            ]);
+            //申請された休憩データを反映
+            foreach ($breaks as $break) {
+                \App\Models\AttendanceBreak::create([
+                    'attendance_id'         => $attendance->id,
+                    'attendance_request_id' => null,
+                    'break_start'           => $break->break_start,
+                    'break_end'             => $break->break_end,
+                ]);
+            }
         }
 
         // ステータスを承認済みに変更
@@ -169,6 +160,8 @@ class AttendanceRequestController extends Controller
             'status' => AttendanceRequest::STATUS_APPROVED,
         ]);
 
+        // 最新のデータを取得し直す（breaksリレーションも含めて）
+        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($attendance->id);
         $updatedRequest = AttendanceRequest::with(['attendance.user', 'attendanceBreaks'])
             ->findOrFail($requestData->id);
 
@@ -179,5 +172,4 @@ class AttendanceRequestController extends Controller
         ])->with('message', '申請を承認しました！');
 
     }
-
 }

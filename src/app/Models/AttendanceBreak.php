@@ -18,15 +18,6 @@ class AttendanceBreak extends Model
 
 
     /**
-     * Carbonインスタンス
-     */
-    protected $casts = [
-        'break_start' => 'datetime',
-        'break_end'   => 'datetime',
-    ];
-
-
-    /**
      * リレーション：出勤記録（Attendance）との１対１
      * どの勤怠の休憩か
      */

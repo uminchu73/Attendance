@@ -34,7 +34,7 @@ class AttendanceSeeder extends Seeder
 
         foreach ($users as $user) {
             //過去60日分の日付を生成
-            $dates = collect(range(0, 59))->map(fn($i) => Carbon::today()->subDays($i));
+            $dates = collect(range(1, 60))->map(fn($i) => Carbon::today()->subDays($i));
 
             foreach ($dates as $date) {
                 //７0%の確率で勤怠データを作る
@@ -47,16 +47,16 @@ class AttendanceSeeder extends Seeder
 
                     //昼休み（必ず）
                     $attendance->breaks()->create([
-                        'break_start' => $date->copy()->hour(12)->minute(0),
-                        'break_end'   => $date->copy()->hour(13)->minute(0),
+                        'break_start' => '12:00:00',
+                        'break_end'   => '13:00:00',
                     ]);
 
-                    //午後の小休憩（50%くらいの確率）
-                    if (rand(0,1)) {
-                        $hour = rand(15,16); // 15〜16時
+                    // 午後の小休憩（50%くらいの確率）
+                    if (rand(0, 1)) {
+                        $hour = rand(15, 16); // 15〜16時
                         $attendance->breaks()->create([
-                            'break_start' => $date->copy()->hour($hour)->minute(0),
-                            'break_end'   => $date->copy()->hour($hour)->minute(15), // 15分
+                            'break_start' => sprintf('%02d:00:00', $hour),
+                            'break_end'   => sprintf('%02d:15:00', $hour), // 15分
                         ]);
                     }
                 }

@@ -138,7 +138,16 @@ class AttendanceController extends Controller
             abort(404);
         }
 
-        return view('detail', compact('attendance', 'user'));
+        // 承認待ちのリクエストがある場合、そのデータも取得
+        $pendingRequest = null;
+        if ($attendance->hasPendingRequest()) {
+            $pendingRequest = AttendanceRequest::with('attendanceBreaks')
+                ->where('attendance_id', $attendance->id)
+                ->where('status', AttendanceRequest::STATUS_PENDING)
+                ->first();
+        }
+
+        return view('detail', compact('attendance', 'user', 'pendingRequest'));
     }
 
 

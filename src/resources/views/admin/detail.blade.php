@@ -46,7 +46,8 @@
                 <th>休憩</th>
                 <td>
                     @foreach($attendance->breaks as $break)
-                        {{ $break->break_start?->format('H:i') ?? '' }} 〜 {{ $break->break_end?->format('H:i') ?? '' }}
+                        {{ $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '' }} 〜
+                        {{ $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '' }}
                         @if(!$loop->last)<br>@endif
                     @endforeach
                 </td>
@@ -82,9 +83,9 @@
                         <th>休憩</th>
                         <td>
                             <input type="hidden" name="breaks[{{ $i }}][id]" value="{{ $break->id }}">
-                            <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start?->format('H:i')) }}">
+                            <input type="time" name="breaks[{{ $i }}][start]" value="{{ old("breaks.$i.start", $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '') }}">
                             <span class="time-separator">〜</span>
-                            <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end?->format('H:i')) }}">
+                            <input type="time" name="breaks[{{ $i }}][end]" value="{{ old("breaks.$i.end", $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '') }}">
                             @error("breaks.$i.start")
                                 <div class="error">{{ $message }}</div>
                             @enderror
