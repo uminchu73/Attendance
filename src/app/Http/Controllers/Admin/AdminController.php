@@ -24,7 +24,7 @@ class AdminController extends Controller
         return view('admin.summary', compact('attendances', 'date'));
     }
 
-    
+
     /**
      * 詳細表示
      */

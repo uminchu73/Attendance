@@ -91,7 +91,7 @@ class AdminStaffController extends Controller
                 $att->work_time,
                 $att->note ?? '',
             ];
-}
+        }
 
         // CSV 文字列作成
         $callback = function() use ($headers, $csvData) {
