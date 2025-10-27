@@ -49,7 +49,10 @@ php artisan migrate --seed
 テーブルを作成し、ダミーデータを投入します。
 
 
-### ５. テスト用データベース作成
+### ５. テストの実行
+
+#### ①テスト用データベースの準備
+
 
 ```
 docker-compose exec mysql bash
@@ -61,6 +64,72 @@ mysql -u root -p
 ```
 CREATE DATABASE demo_test;
 ```
+#### ②configファイルの変更
+
+configディレクトリの中のdatabase.phpを開き、mysqlの配列部分をコピーして以下に新たにmysql_testを作成します。
+
+```
+'mysql' => [
+// 中略
+],
+
++ 'mysql_test' => [
++             'driver' => 'mysql',
++             'url' => env('DATABASE_URL'),
++             'host' => env('DB_HOST', '127.0.0.1'),
++             'port' => env('DB_PORT', '3306'),
++             'database' => 'demo_test',
++             'username' => 'root',
++             'password' => 'root',
++             'unix_socket' => env('DB_SOCKET', ''),
++             'charset' => 'utf8mb4',
++             'collation' => 'utf8mb4_unicode_ci',
++             'prefix' => '',
++             'prefix_indexes' => true,
++             'strict' => true,
++             'engine' => null,
++             'options' => extension_loaded('pdo_mysql') ? array_filter([
++                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
++             ]) : [],
++ ],
+```
+
+#### ③テスト用の.envファイル作成
+```
+docker-compose exec php bash
+```
+```
+cp .env .env.testing
+```
+.env.testingファイルの文頭部分にあるAPP_ENVとAPP_KEYを編集します。
+
+```
+APP_ENV=test
+APP_KEY=
+```
+.env.testingにデータベースの接続情報を加えてください。
+```
+DB_DATABASE=demo_test
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+APP_KEYに新たなテスト用のアプリケーションキーを加えます。
+```
+php artisan key:generate --env=testing
+```
+```
+php artisan config:clear
+```
+```
+php artisan migrate --env=testing
+```
+
+#### ④テストの実行
+```
+php artisan test
+```
+
+
 
 ## 初期ログイン情報
 

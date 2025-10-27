@@ -68,7 +68,7 @@ Route::prefix('admin')->group(function () {
     // ログイン済み
     Route::middleware('auth:admin')->group(function () {
         Route::post('logout', [AdminLogoutController::class, 'logout'])->name('admin.logout');
-        Route::get('attendance/list', [AdminController::class, 'index'])->name('admin.summary');
+        Route::get('attendance', [AdminController::class, 'index'])->name('admin.summary');
         Route::get('attendance/{id}', [AdminController::class, 'show'])->name('admin.detail');
         Route::post('attendance/{id}/update', [AdminController::class, 'update'])->name('admin.attendance.update');
 
