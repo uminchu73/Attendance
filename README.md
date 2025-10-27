@@ -64,37 +64,8 @@ mysql -u root -p
 ```
 CREATE DATABASE demo_test;
 ```
-#### ②configファイルの変更
 
-configディレクトリの中のdatabase.phpを開き、mysqlの配列部分をコピーして以下に新たにmysql_testを作成します。
-
-```
-'mysql' => [
-// 中略
-],
-
-+ 'mysql_test' => [
-+             'driver' => 'mysql',
-+             'url' => env('DATABASE_URL'),
-+             'host' => env('DB_HOST', '127.0.0.1'),
-+             'port' => env('DB_PORT', '3306'),
-+             'database' => 'demo_test',
-+             'username' => 'root',
-+             'password' => 'root',
-+             'unix_socket' => env('DB_SOCKET', ''),
-+             'charset' => 'utf8mb4',
-+             'collation' => 'utf8mb4_unicode_ci',
-+             'prefix' => '',
-+             'prefix_indexes' => true,
-+             'strict' => true,
-+             'engine' => null,
-+             'options' => extension_loaded('pdo_mysql') ? array_filter([
-+                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-+             ]) : [],
-+ ],
-```
-
-#### ③テスト用の.envファイル作成
+#### ②テスト用の.envファイル作成
 ```
 docker-compose exec php bash
 ```
@@ -124,7 +95,7 @@ php artisan config:clear
 php artisan migrate --env=testing
 ```
 
-#### ④テストの実行
+#### ③テストの実行
 ```
 php artisan test
 ```
